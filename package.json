@@ -1,22 +1,34 @@
 {
-  "name": "npm-confirm",
-  "version": "0.0.1",
-  "description": "Confirm your package manager before running NPM install!",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "type": "module",
-  "license": "ISC",
-  "dependencies": {
-    "@inquirer/select": "^2.2.1",
-    "chalk": "^5.3.0",
-    "cmd-spawn": "^1.4.0",
-    "detect-package-manager": "^3.0.1",
-    "execa": "^8.0.1"
-  },
-  "bin": {
-	"npmc": "./bin/npmc.js"
-  }
+	"name": "npm-confirm",
+	"version": "0.0.1",
+	"description": "Confirm your package manager before running NPM install!",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"local-install": "npm link && npm install -g ."
+	},
+	"author": "EvanZhouDev",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/EvanZhouDev/npm-confirm.git"
+	},
+	"homepage": "https://github.com/EvanZhouDev/npm-confirm",
+	"keywords": [
+		"npm",
+		"bun",
+		"pnpm",
+		"yarn"
+	],
+	"license": "GPL-3.0",
+	"dependencies": {
+		"@inquirer/select": "^2.2.1",
+		"chalk": "^5.3.0",
+		"cmd-spawn": "^1.4.0",
+		"detect-package-manager": "^3.0.1",
+		"execa": "^8.0.1"
+	},
+	"bin": {
+		"npmc": "./bin/npmc.js"
+	}
 }
