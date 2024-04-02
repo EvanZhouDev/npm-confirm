@@ -1,6 +1,6 @@
 {
 	"name": "npm-confirm",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Confirm your package manager before running NPM install!",
 	"main": "index.js",
 	"scripts": {
