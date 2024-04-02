@@ -9,29 +9,6 @@ let args = process.argv.slice(2);
 
 let current = "npm"
 
-// add ability to only source certain package managers
-if (args[0] === "--shellcode") {
-    args = args.slice(1);
-    let aliases = {
-        npm: "alias npm='npmc'",
-        pnpm: "alias pnpm='npmc --pnpm-alias'",
-        bun: "alias bun='npmc --bun-alias'",
-        yarn: "alias yarn='npmc --yarn-alias'"
-    };
-    if (args.length === 0) {
-        for (let alias in aliases) {
-            console.log(aliases[alias]);
-        }
-    } else {
-        for (let arg of args) {
-            if (aliases[arg]) {
-                console.log(aliases[arg]);
-            }
-        }
-    }
-    process.exit(0);
-}
-
 if (args[0] === "--pnpm-alias") {
     args.shift();
     current = "pnpm"
@@ -46,7 +23,6 @@ if (args[0] === "--yarn-alias") {
 }
 
 const confirmBlockList = ["-v", "--version", "help", "-h", "--help"]
-
 
 for (let blockedWord of confirmBlockList) {
     if (args.includes(blockedWord)) {
