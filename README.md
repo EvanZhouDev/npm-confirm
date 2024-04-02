@@ -37,6 +37,45 @@ With this method, there's no thinking involved. Additionally, `npmc` shows you t
 npm install -g npm-confirm
 ```
 
+This will expose a `npmc` command.
+
+`npmc` is a wrapper for the `npm` command that confirms with you if it detects you using another package manager. 
+
+I recommend aliasing `npmc` to just `npm`. For example, add this to your `.zshrc`:
+
+```bash
+alias npm='npmc'
+```
+
+<details>
+<summary>Wrapping `pnpm`, `bun`, and `yarn`</summary>
+
+You may also want the `pnpm`, `bun`, and `yarn` commands to give confirmation when used with the wrong package manager.
+
+If you run `npmc` with the `--[NAME]-alias` flag, it will act as that package manager.
+
+For example, if I run `npmc --pnpm-alias`, it will act as `pnpm` and confirm with you if you are using another package manager.
+
+Similarly, you can add aliases for these commands in your `.zshrc`:
+
+```bash
+# npm
+alias npm='npmc'
+
+# pnpm
+alias pnpm='npmc --pnpm-alias'
+
+# bun
+alias bun='npmc --bun-alias'
+
+# yarn
+alias yarn='npmc --yarn-alias'
+```
+
+Ensure the package manager you are wrapping is installed beforehand, or the user experience may be poor.
+
+</details>
+
 
 
 
