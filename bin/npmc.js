@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { detect } from "detect-package-manager"
+import { detect } from "../detect-package-manager.js"
 import select from '@inquirer/select';
 import chalk from "chalk";
 import { execa } from 'execa';
@@ -9,12 +9,27 @@ let args = process.argv.slice(2);
 
 let current = "npm"
 
+// add ability to only source certain package managers
 if (args[0] === "--shellcode") {
-    console.log(`alias npm='npmc'
-alias pnpm='npmc --pnpm-alias'
-alias bun='npmc --bun-alias'
-alias yarn='npmc --yarn-alias'`)
-    process.exit(0)
+    args = args.slice(1);
+    let aliases = {
+        npm: "alias npm='npmc'",
+        pnpm: "alias pnpm='npmc --pnpm-alias'",
+        bun: "alias bun='npmc --bun-alias'",
+        yarn: "alias yarn='npmc --yarn-alias'"
+    };
+    if (args.length === 0) {
+        for (let alias in aliases) {
+            console.log(aliases[alias]);
+        }
+    } else {
+        for (let arg of args) {
+            if (aliases[arg]) {
+                console.log(aliases[arg]);
+            }
+        }
+    }
+    process.exit(0);
 }
 
 if (args[0] === "--pnpm-alias") {
@@ -30,7 +45,27 @@ if (args[0] === "--yarn-alias") {
     current = "yarn"
 }
 
+const confirmBlockList = ["-v", "--version", "help", "-h", "--help"]
+
+
+for (let blockedWord of confirmBlockList) {
+    if (args.includes(blockedWord)) {
+        try {
+            await execa(current, args, { stdio: 'inherit' })
+        } catch (e) { console.log(e.originalMessage) }
+        process.exit(0)
+    }
+}
+
+
 const pm = await detect();
+
+if (pm === "none") {
+    try {
+        await execa(current, args, { stdio: 'inherit' })
+    } catch (e) { console.log(e.originalMessage) }
+    process.exit(0)
+}
 
 const pmInfo = {
     "bun": {
@@ -117,6 +152,7 @@ let formatArgs = (rawArgs) => {
     return args;
 }
 
+
 if (current !== pm) {
     let formattedArgs = formatArgs(structuredClone(args))
 
@@ -153,14 +189,14 @@ if (current !== pm) {
     } else if (answer == "useDefault") {
         try {
             await execa(current, args, { stdio: 'inherit' })
-        } catch (e) {console.log(e.originalMessage)}
+        } catch (e) { console.log(e.originalMessage) }
     } else if (answer == "useAlternate") {
         try {
             await execa(pm, formattedArgs, { stdio: 'inherit' })
-        } catch (e) {console.log(e.originalMessage)}
+        } catch (e) { console.log(e.originalMessage) }
     }
 } else {
     try {
         await execa(current, args, { stdio: 'inherit' })
-    } catch (e) {console.log(e.originalMessage)}
+    } catch (e) { console.log(e.originalMessage) }
 }
