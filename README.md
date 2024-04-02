@@ -4,30 +4,30 @@
 
 ![npm Confirm Demo](./art/npmc-demo.png)
 
+<p align="center">
+<a href="#installation">Installation</a> | <a href="#features">Features</a>
+</p>
+
+
 ## What is `npmc`?
 
-`npmc` is a command line tool that prevents package manager mix-ups in your JS projects.
+`npmc` is a wrapper for the `npm` command that *confirms with you if it detects you using another package manager*.
 
-If you run a command with the wrong package manager, `npmc` will suggest the correct one and reformats the command for your package manager.
+When confirming, you can choose to do 3 things:
+1. Run your command, [**adapted for the new package manager**](#automatic-command-adaptation)
+2. Run your **original command**
+3. **Cancel** the operation 
 
-All commands that `npmc` may run are shown to you before they are executed, for full transparency.
-
-You can choose to run the corrected command, stick with the original, or just cancel the operation.
-
-Now, you can just copy and paste install code blocks from documentation without needing to change the package manager!
+Now, you can just copy and paste `npm install` commands from documentation without needing to manually edit the package manager!
 
 <details>
-<summary>Why not `@antfu/ni`?</summary>
+<summary>Why not <code>@antfu/ni</code>?</summary>
 
-**TL;DR**: `npmc` saves you the hassle of needing to manually rewrite commands you copied... it just works running `npm` (and all other major package managers).
+When aliased to just `npm`, `npmc` serves as a quick way to run commands copied from external sources without needing to modify it at all, as opposed to `ni`, which reqires you to still swap out the `npm install` bit.
 
-I believe that `@antfu/ni` is a great tool for what it does, but it does have a few limitations.
-
-In order to use `ni`, you must modify installation commands that you typically copy from documentation. While it does save you the hassle of having to think of which package manager you're using, it still requires an extra step.
-
-With `npmc`, you can just run the command directly, and have the tool suggest the corrected command for your package manager.
-
-With this method, there's no thinking involved. Additionally, `npmc` shows you the commands that it's running, so you have full control over what you're doing, or not doing.
+However, these tools can serve as compliments.
+* If you are typing commands directly, you can still choose to use `ni`.
+* You can use `npmc` in addition for copying and pasting or to catch occasional slipups.
 
 </details>
 
@@ -37,26 +37,26 @@ With this method, there's no thinking involved. Additionally, `npmc` shows you t
 npm install -g npm-confirm
 ```
 
-This will expose a `npmc` command.
+This will give you access to the `npmc` command.
 
-`npmc` is a wrapper for the `npm` command that confirms with you if it detects you using another package manager. 
+I recommend aliasing `npmc` to just `npm` so you can use `npm` like normal.
 
-I recommend aliasing `npmc` to just `npm`. For example, add this to your `.zshrc`:
+To do this in ZSH or Bash add this to your `.zshrc` or `.bashrc`:
 
 ```bash
 alias npm='npmc'
 ```
 
 <details>
-<summary>Wrapping `pnpm`, `bun`, and `yarn`</summary>
+<summary>Wrapping <code>pnpm</code>, <code>bun</code>, and <code>yarn</code></summary>
 
 You may also want the `pnpm`, `bun`, and `yarn` commands to give confirmation when used with the wrong package manager.
 
-If you run `npmc` with the `--[NAME]-alias` flag, it will act as that package manager.
+By default, `npmc` acts as `npm` when no other package managers are detected. However, you can change that default by simply passing a `--[NAME]-alias` flag.
 
-For example, if I run `npmc --pnpm-alias`, it will act as `pnpm` and confirm with you if you are using another package manager.
+For example, if I run `npmc --pnpm-alias`, it will act as `pnpm` and confirm with you if you are using a non-`pnpm` package manager.
 
-Similarly, you can add aliases for these commands in your `.zshrc`:
+Again, I recommend aliasing these in `.zshrc`:
 
 ```bash
 # npm
@@ -72,10 +72,26 @@ alias bun='npmc --bun-alias'
 alias yarn='npmc --yarn-alias'
 ```
 
-Ensure the package manager you are wrapping is installed beforehand, or the user experience may be poor.
-
 </details>
 
+## Features
 
+### Automatic Command Adaptation
 
+`npmc` will automatically adapt agent subcommands and flags from one package manager to the other.
 
+For example, NPM's `ci` command will automatically be converted to `bun install --no-save` for Bun, and accordingly for other package managers.
+
+### Command Preview
+
+`npmc` always shows you what command will be run, both when using the adapted package manager, or even the one you ran the command with.
+
+This maximizes transparency, and ensures `npmc` never does something you didn't mean when adapting commands.
+
+Have a problem with command adaptation? Submit an issue!
+
+### Never Confirm List
+
+`npmc` has a list of keywords, that when detected in your commands, won't trigger confirmation.
+
+This includes `help`, `-v`, and more, so you can check docs or the version of another package manager without `npmc` bothering you.
