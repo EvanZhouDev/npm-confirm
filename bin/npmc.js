@@ -98,6 +98,7 @@ let args = process.argv.slice(2);
 
 	if (arrayIncludesAny(args, pmInfo[current].global)) {
 		runCommand(current, args);
+        return;
 	}
 
 	let shouldRun = false;
